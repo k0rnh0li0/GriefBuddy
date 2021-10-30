@@ -23,12 +23,11 @@ CONFIG = {}
 def do_request(page_num):
     # construct API request
     api_params = {
+        "key": CONFIG["API_KEY"],
         "page": page_num,
         "query": "Minecraft"
     }
 
-    if CONFIG["API_KEY"] != "":
-        api_params["key"] = CONFIG["API_KEY"]
     if CONFIG["MC_VERSION"] != "":
         api_params["query"] = "Minecraft " + CONFIG["MC_VERSION"]
 
