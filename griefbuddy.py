@@ -31,8 +31,15 @@ def do_request(page_num):
     if CONFIG["MC_VERSION"] != "":
         api_params["query"] = "Minecraft " + CONFIG["MC_VERSION"]
 
-    result = requests.get(API_URL, params=api_params).json()
+    result = requests.get(API_URL, params=api_params)
 
+    if result.status_code == 401:
+        print("Error 401 from Shodan, your API key is most likely incorrect.")
+        print("Go to https://account.shodan.io/ and copy the API key into")
+        print("your config.json correctly.")
+        exit()
+
+    result = result.json()
     if "error" in result:
         # API call returned an error
         print("SHODAN ERROR: " + result["error"])
