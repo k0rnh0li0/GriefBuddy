@@ -1,5 +1,7 @@
 # GriefBuddy
-**ALTERNATIVELY:** You can go to http://k0rnh0l.io/griefbuddy and see the 100 most recently-indexed servers right in your browser.
+**ALTERNATIVELY:** You can go to http://k0rnh0l.io/griefbuddy and see the 100 most recently-indexed servers right in your browser. 
+
+You can also go to https://grief.getgle.org to use the Getgle Version of GriefBuddy in your browser!
 
 This script searches Shodan for Minecraft server IPs to grief. This will return all servers connected to the public
 internet which Shodan has indexed, regardless of whether or not they have been advertised anywhere. Some will have a whitelist,
