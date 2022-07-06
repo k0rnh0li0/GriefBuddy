@@ -20,7 +20,9 @@ PAGE_SIZE = 100
 # user config loaded from config.json
 CONFIG = {}
 
+
 def do_request(page_num):
+    print(page_num)
     # construct API request
     api_params = {
         "key": CONFIG["API_KEY"],
@@ -47,6 +49,7 @@ def do_request(page_num):
 
     return result
 
+
 def parse_page(page_json):
     result = []
     for server in page_json["matches"]:
@@ -58,6 +61,7 @@ def parse_page(page_json):
         port = str(server["port"])
         result.append(ip + ":" + port)
     return result
+
 
 if __name__ == "__main__":
     print("GriefBuddy 2021")
@@ -78,14 +82,25 @@ if __name__ == "__main__":
         print("put your API key in config.json.")
         exit()
 
-    if CONFIG["PAGES"] < 1:
+    page_range = CONFIG["PAGES"]
+    if isinstance(page_range, int) and page_range < 1:
         print("PAGES must be greater than 0.")
         exit()
 
     print("Searching for servers...")
     server_results = []
-    for i in range(CONFIG["PAGES"]):
-        resp = do_request(i + 1)
+
+    # parse the provided page range as an inclusive range
+    lower_page = -1
+    upper_page = -1
+    if isinstance(page_range, int):
+        lower_page = 1
+        upper_page = page_range
+    else:  # assume a range is given as a string
+        lower_page, upper_page = [int(x) for x in page_range.split("-")]
+
+    for i in range(lower_page, upper_page + 1):
+        resp = do_request(i)
 
         if resp is not None:
             ips = parse_page(resp)
