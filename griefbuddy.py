@@ -22,7 +22,6 @@ CONFIG = {}
 
 
 def do_request(page_num):
-    print(page_num)
     # construct API request
     api_params = {
         "key": CONFIG["API_KEY"],
@@ -63,6 +62,22 @@ def parse_page(page_json):
     return result
 
 
+def print_ips(ips):
+    if CONFIG["OUTPUT_FILE"] == "":
+        # print results to stdout
+        for ip in ips:
+            print(ip)
+    else:
+        try:
+            with open(CONFIG["OUTPUT_FILE"], "w") as f:
+                for ip in ips:
+                    f.write(ip + "\n")
+        except Exception as e:
+            print("Failed to open output file!")
+            print(e)
+            exit()
+
+
 if __name__ == "__main__":
     print("GriefBuddy 2021")
     print("I AM THE GREAT K0RNH0LI0!")
@@ -88,7 +103,6 @@ if __name__ == "__main__":
         exit()
 
     print("Searching for servers...")
-    server_results = []
 
     # parse the provided page range as an inclusive range
     lower_page = -1
@@ -104,18 +118,4 @@ if __name__ == "__main__":
 
         if resp is not None:
             ips = parse_page(resp)
-            server_results.extend(ips)
-
-    if CONFIG["OUTPUT_FILE"] == "":
-        # print results to stdout
-        for ip in server_results:
-            print(ip)
-    else:
-        try:
-            with open(CONFIG["OUTPUT_FILE"], "w") as f:
-                for ip in server_results:
-                    f.write(ip + "\n")
-        except Exception as e:
-            print("Failed to open output file!")
-            print(e)
-            exit()
+            print_ips(ips)  # print ips on the go in case of an error
