@@ -69,7 +69,7 @@ def print_ips(ips):
             print(ip)
     else:
         try:
-            with open(CONFIG["OUTPUT_FILE"], "w") as f:
+            with open(CONFIG["OUTPUT_FILE"], "a") as f:
                 for ip in ips:
                     f.write(ip + "\n")
         except Exception as e:
@@ -103,6 +103,10 @@ if __name__ == "__main__":
         exit()
 
     print("Searching for servers...")
+
+    # clear the file before appending
+    if CONFIG["OUTPUT_FILE"] != "":
+        open(CONFIG["OUTPUT_FILE"], 'w').close()
 
     # parse the provided page range as an inclusive range
     lower_page = -1
