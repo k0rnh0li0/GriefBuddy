@@ -20,6 +20,7 @@ PAGE_SIZE = 100
 # user config loaded from config.json
 CONFIG = {}
 
+
 def do_request(page_num):
     # construct API request
     api_params = {
@@ -47,6 +48,7 @@ def do_request(page_num):
 
     return result
 
+
 def parse_page(page_json):
     result = []
     for server in page_json["matches"]:
@@ -58,6 +60,23 @@ def parse_page(page_json):
         port = str(server["port"])
         result.append(ip + ":" + port)
     return result
+
+
+def print_ips(ips):
+    if CONFIG["OUTPUT_FILE"] == "":
+        # print results to stdout
+        for ip in ips:
+            print(ip)
+    else:
+        try:
+            with open(CONFIG["OUTPUT_FILE"], "a") as f:
+                for ip in ips:
+                    f.write(ip + "\n")
+        except Exception as e:
+            print("Failed to open output file!")
+            print(e)
+            exit()
+
 
 if __name__ == "__main__":
     print("GriefBuddy 2021")
@@ -78,29 +97,29 @@ if __name__ == "__main__":
         print("put your API key in config.json.")
         exit()
 
-    if CONFIG["PAGES"] < 1:
+    page_range = CONFIG["PAGES"]
+    if isinstance(page_range, int) and page_range < 1:
         print("PAGES must be greater than 0.")
         exit()
 
     print("Searching for servers...")
-    server_results = []
-    for i in range(CONFIG["PAGES"]):
-        resp = do_request(i + 1)
+
+    # clear the file before appending
+    if CONFIG["OUTPUT_FILE"] != "":
+        open(CONFIG["OUTPUT_FILE"], 'w').close()
+
+    # parse the provided page range as an inclusive range
+    lower_page = -1
+    upper_page = -1
+    if isinstance(page_range, int):
+        lower_page = 1
+        upper_page = page_range
+    else:  # assume a range is given as a string
+        lower_page, upper_page = [int(x) for x in page_range.split("-")]
+
+    for i in range(lower_page, upper_page + 1):
+        resp = do_request(i)
 
         if resp is not None:
             ips = parse_page(resp)
-            server_results.extend(ips)
-
-    if CONFIG["OUTPUT_FILE"] == "":
-        # print results to stdout
-        for ip in server_results:
-            print(ip)
-    else:
-        try:
-            with open(CONFIG["OUTPUT_FILE"], "w") as f:
-                for ip in server_results:
-                    f.write(ip + "\n")
-        except Exception as e:
-            print("Failed to open output file!")
-            print(e)
-            exit()
+            print_ips(ips)  # print ips on the go in case of an error

@@ -35,7 +35,7 @@ change the script's behavior by editing this file.
 * `API_KEY` - This must be set. Get your API key from https://account.shodan.io/.
 * `PAGES` - How many pages of results to query. Shodan returns 100 results per page. The first page is always free, but querying any pages
 beyond the first page will charge you 1 API credit. For example, if you set PAGES to 5, you will be charged 4 API credits total when you
-run the script. The first page is usually good enough anyway, it gets updated often as Shodan indexes new servers.
+run the script. The first page is usually good enough anyway, it gets updated often as Shodan indexes new servers. You can query a certain page range by specifying an inclusive range as a string e.g., `"4-8"` (pages 4 to 8)
 * `MC_VERSION` - Search for a specific Minecraft server version. You can leave this blank, but results may be less reliable and the script
 may not work correctly. I recommend having a Minecraft version set.
 * `ACTIVE_ONLY` - If you set this to `true`, IPs will only be output if Shodan shows that they have a non-zero Online Players count. This
